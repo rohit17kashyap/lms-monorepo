@@ -1,4 +1,4 @@
-Here are the steps extracted as plain text from the guide:
+# Installation Steps
 
 ### Step 1: Check Python Version
 
@@ -114,7 +114,7 @@ Here are the steps extracted as plain text from the guide:
 
 - Enter username, email, and password when prompted.
 
-### Step 11: Run Django Server
+### Step 12: Run Django Server
 
 - Start the development server:
 
@@ -122,7 +122,7 @@ Here are the steps extracted as plain text from the guide:
   python manage.py runserver
   ```
 
-### Step 12: Access the Project
+### Step 13: Access the Project
 
 - Open:
 
@@ -130,7 +130,7 @@ Here are the steps extracted as plain text from the guide:
   http://127.0.0.1:8000/
   ```
 
-### Step 13: Access Django Admin Panel
+### Step 14: Access Django Admin Panel
 
 - Open:
 
@@ -140,8 +140,8 @@ Here are the steps extracted as plain text from the guide:
 
 - Log in using the superuser credentials.
 
-### Expected Result
+## Expected Result
 
-- Django LMS login page loads successfully.
-- Django admin panel is accessible.
-- Project runs successfully.
+- Django LMS login page loads successfully
+- Django admin panel is accessible
+- Project runs successfully
