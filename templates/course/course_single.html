@@ -61,13 +61,17 @@
                             <th>{% trans 'Video Title' %}</th>
                             <th>{% trans 'Uploaded Date' %}</th>
                             <th>{% trans 'Get Started' %}</th>
+                            {% if request.user.is_student %}
+                            <th>{% trans 'Progress' %}</th>
+                            {% endif %}
                             {% if request.user.is_superuser or request.user.is_lecturer %}
                             <th>{% trans 'Actions' %}</th>
                             {% endif %}
                         </tr>
                     </thead>
                     <tbody>
-                        {% for video in videos %}
+                        {% for row in video_rows %}
+                        {% with video=row.video %}
                         <tr>
                             <td>{{ forloop.counter }}</td>
                             <td>
@@ -83,6 +87,11 @@
                                         <i class="fas fa-play me-1"></i>{% trans 'Play now' %}</a>
                                 </div>
                             </th>
+                            {% if request.user.is_student %}
+                            <td>
+                                <span class="small text-muted video-progress-pct" data-video-id="{{ video.pk }}">{{ row.progress_pct }}%</span>
+                            </td>
+                            {% endif %}
 
                             {% if request.user.is_superuser or request.user.is_lecturer %}
                             <td>
@@ -99,6 +108,7 @@
                             </td>
                             {% endif %}
                         </tr>
+                        {% endwith %}
                         {% empty %}
                         <tr>
                             <td></td>
@@ -116,8 +126,12 @@
                                 </span>
                             </td>
                             <td></td>
+                            {% if request.user.is_student %}
                             <td></td>
+                            {% endif %}
+                            {% if request.user.is_superuser or request.user.is_lecturer %}
                             <td></td>
+                            {% endif %}
                         </tr>
                         {% endfor %}
                     </tbody>

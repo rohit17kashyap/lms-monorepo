@@ -23,6 +23,7 @@ from .forms import (
 )
 from .filters import ProgramFilter, CourseAllocationFilter
 from .models import Program, Course, CourseAllocation, Upload, UploadVideo
+from .services import video_progress as video_progress_service
 
 
 @method_decorator([login_required, lecturer_required], name="dispatch")
@@ -129,10 +130,22 @@ def program_delete(request, pk):
 def course_single(request, slug):
     course = Course.objects.get(slug=slug)
     files = Upload.objects.filter(course__slug=slug)
-    videos = UploadVideo.objects.filter(course__slug=slug)
+    videos = list(UploadVideo.objects.filter(course__slug=slug))
 
     # lecturers = User.objects.filter(allocated_lecturer__pk=course.id)
     lecturers = CourseAllocation.objects.filter(courses__pk=course.id)
+
+    video_progress_map = {}
+    if request.user.is_authenticated and getattr(request.user, "is_student", False):
+        student = Student.objects.filter(student=request.user).first()
+        if student and TakenCourse.objects.filter(student=student, course=course).exists():
+            video_progress_map = video_progress_service.progress_map_for_videos(
+                student, [v.pk for v in videos]
+            )
+
+    video_rows = [
+        {"video": v, "progress_pct": video_progress_map.get(v.pk, 0)} for v in videos
+    ]
 
     return render(
         request,
@@ -142,8 +155,10 @@ def course_single(request, slug):
             "course": course,
             "files": files,
             "videos": videos,
+            "video_rows": video_rows,
             "lecturers": lecturers,
             "media_url": settings.MEDIA_ROOT,
+            "video_progress_map": video_progress_map,
         },
     )
 
@@ -354,6 +369,8 @@ def handle_file_edit(request, slug, file_id):
     )
 
 
+@login_required
+@lecturer_required
 def handle_file_delete(request, slug, file_id):
     file = Upload.objects.get(pk=file_id)
     # file_name = file.name
@@ -391,11 +408,34 @@ def handle_video_upload(request, slug):
 
 
 @login_required
-# @lecturer_required
 def handle_video_single(request, slug, video_slug):
     course = get_object_or_404(Course, slug=slug)
-    video = get_object_or_404(UploadVideo, slug=video_slug)
-    return render(request, "upload/video_single.html", {"video": video})
+    video = get_object_or_404(UploadVideo, slug=video_slug, course=course)
+
+    tracker = False
+    initial = {"position_seconds": 0.0, "duration_seconds": 0.0, "progress_percent": 0}
+    if request.user.is_authenticated and getattr(request.user, "is_student", False):
+        student = Student.objects.filter(student=request.user).first()
+        if student and video_progress_service.student_can_track_video(student, video):
+            tracker = True
+            row = video_progress_service.get_progress(student, video)
+            if row:
+                initial = {
+                    "position_seconds": float(row.position_seconds),
+                    "duration_seconds": float(row.duration_seconds),
+                    "progress_percent": int(row.progress_percent),
+                }
+
+    return render(
+        request,
+        "upload/video_single.html",
+        {
+            "course": course,
+            "video": video,
+            "video_progress_tracker": tracker,
+            "video_initial_progress": initial,
+        },
+    )
 
 
 @login_required
@@ -421,6 +461,8 @@ def handle_video_edit(request, slug, video_slug):
     )
 
 
+@login_required
+@lecturer_required
 def handle_video_delete(request, slug, video_slug):
     video = get_object_or_404(UploadVideo, slug=video_slug)
     # video = UploadVideo.objects.get(slug=video_slug)

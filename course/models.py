@@ -295,6 +295,58 @@ def log_delete(sender, instance, **kwargs):
     )
 
 
+class VideoWatchProgress(models.Model):
+    """
+    One row per student per video (enforced by DB constraint).
+    Stores last playback position for resume and a cached completion percentage.
+    """
+
+    student = models.ForeignKey(
+        "accounts.Student",
+        on_delete=models.CASCADE,
+        related_name="video_watch_progress",
+    )
+    video = models.ForeignKey(
+        UploadVideo,
+        on_delete=models.CASCADE,
+        related_name="watch_progress",
+    )
+    position_seconds = models.FloatField(
+        default=0.0,
+        help_text=_("Last watched playback time in seconds (HTML5 video currentTime)."),
+    )
+    duration_seconds = models.FloatField(
+        default=0.0,
+        help_text=_("Video duration when last reported (for percentage)."),
+    )
+    progress_percent = models.PositiveSmallIntegerField(
+        default=0,
+        help_text=_("Cached 0–100 for list views and dashboards."),
+    )
+    completed = models.BooleanField(
+        default=False,
+        help_text=_("True when the viewer reached ~95% or the 'ended' event."),
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = _("Video watch progress")
+        verbose_name_plural = _("Video watch progress")
+        constraints = [
+            models.UniqueConstraint(
+                fields=["student", "video"],
+                name="uniq_student_video_watch_progress",
+            ),
+        ]
+        indexes = [
+            models.Index(fields=["student", "video"]),
+        ]
+
+    def __str__(self):
+        return f"{self.student_id}:{self.video_id} @ {self.position_seconds:.1f}s"
+
+
 class CourseOffer(models.Model):
     _("""NOTE: Only department head can offer semester courses""")
 

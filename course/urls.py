@@ -1,8 +1,9 @@
-from django.urls import path
+from django.urls import include, path
 from .views import *
 
 
 urlpatterns = [
+    path("api/", include("course.api.urls")),
     # Program urls
     path("", ProgramFilterView.as_view(), name="programs"),
     path("<int:pk>/detail/", program_detail, name="program_detail"),

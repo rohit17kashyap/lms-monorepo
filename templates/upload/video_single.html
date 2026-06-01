@@ -26,8 +26,31 @@
     }
 </style>
 
+{% if video_progress_tracker %}
+{% csrf_token %}
+{% endif %}
+
 <div class="col-md-10 mx-auto d-block">
-    <div class=""><video src="{{ video.video.url }}" controls ></video></div>
+    <div class="">
+        <video
+            id="course-video-player"
+            class="{% if video_progress_tracker %}js-track-progress{% endif %}"
+            src="{{ video.video.url }}"
+            controls
+            playsinline
+            preload="metadata"
+            {% if video_progress_tracker %}
+            data-video-id="{{ video.pk }}"
+            data-api-url="{% url 'api_video_progress' %}"
+            data-initial-position="{{ video_initial_progress.position_seconds|default_if_none:0 }}"
+            {% endif %}
+        ></video>
+    </div>
+    {% if video_progress_tracker %}
+    <p class="small text-muted mt-2 mb-0" id="inline-video-progress">
+        {% trans 'Progress' %}: <span id="inline-video-progress-pct">{{ video_initial_progress.progress_percent|default:0 }}</span>%
+    </p>
+    {% endif %}
     <p><i class="fas fa-calendar"></i> {{ video.timestamp|timesince }} {% trans 'ago' %}</p>
     {% if video.summary %}
     <p class="text-orange text-center">{{ video.summary }}</p>
@@ -37,3 +60,21 @@
 </div>
 
 {% endblock content %}
+
+{% block js %}
+{% if video_progress_tracker %}
+<script src="{% static 'js/video_progress_tracker.js' %}"></script>
+<script>
+(function () {
+  var el = document.getElementById("course-video-player");
+  if (!el) return;
+  var pctEl = document.getElementById("inline-video-progress-pct");
+  el.addEventListener("timeupdate", function () {
+    if (!el.duration || !isFinite(el.duration) || el.duration <= 0) return;
+    var p = Math.min(100, Math.round((el.currentTime / el.duration) * 100));
+    if (pctEl) pctEl.textContent = String(p);
+  });
+})();
+</script>
+{% endif %}
+{% endblock %}

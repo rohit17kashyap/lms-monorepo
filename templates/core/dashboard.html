@@ -165,7 +165,7 @@
 {% block js %}
 
 <script src="{% url 'javascript-catalog' %}"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
 <script src="{% static 'js/dashboard.js' %}"></script>
 <script>
 	$('.fa-expand-alt').click(function () {
@@ -200,25 +200,25 @@ $(document).ready(function () {
             backgroundColor: 'rgba(86, 224, 224, 0.5)',
             borderColor: 'rgb(86, 224, 224)',
             hoverBorderWidth: 3,
-            data: [0, 10, 5, 2, 20, 30, 45]
+            data: [0, 10, 5, 2, 20, 30]
         }, {
             label: gettext('Teachers'),
             backgroundColor: 'rgba(253, 174, 28, 0.5)',
             borderColor: 'rgb(253, 174, 28)',
             hoverBorderWidth: 3,
-            data: [20, 0, 15, 4, 6, 4, 60],
+            data: [20, 0, 15, 4, 6, 4],
         }, {
             label: gettext('Admins'),
             backgroundColor: 'rgba(203, 31, 255, 0.5)',
             borderColor: 'rgb(203, 31, 255)',
             hoverBorderWidth: 3,
-            data: [85, 30, 34, 20, 20, 55, 45],
+            data: [85, 30, 34, 20, 20, 55],
         }, {
             label: gettext('Stuffs'),
             backgroundColor: 'rgba(255, 19, 157, 0.5)',
             borderColor: 'rgb(255, 19, 157)',
             hoverBorderWidth: 3,
-            data: [45, 75, 70, 80, 20, 30, 90],
+            data: [45, 75, 70, 80, 20, 30],
         }]
     };
 
@@ -253,31 +253,31 @@ $(document).ready(function () {
             backgroundColor: 'rgba(86, 224, 224, 0.5)',
             borderColor: 'rgb(86, 224, 224)',
             hoverBorderWidth: 3,
-            data: [0, 10, 5, 2, 20, 30, 45]
+            data: [0, 10, 5, 2, 20, 30]
         }, {
             label: gettext('Architecture'),
             backgroundColor: 'rgba(253, 174, 28, 0.5)',
             borderColor: 'rgb(253, 174, 28)',
             hoverBorderWidth: 3,
-            data: [20, 0, 15, 4, 6, 4, 60],
+            data: [20, 0, 15, 4, 6, 4],
         }, {
             label: gettext('Civil Eng'),
             backgroundColor: 'rgba(203, 31, 255, 0.5)',
             borderColor: 'rgb(203, 31, 255)',
             hoverBorderWidth: 3,
-            data: [85, 30, 34, 20, 20, 55, 45],
+            data: [85, 30, 34, 20, 20, 55],
         }, {
             label: gettext('Accounting'),
             backgroundColor: 'rgba(255, 19, 157, 0.5)',
             borderColor: 'rgb(255, 19, 157)',
             hoverBorderWidth: 3,
-            data: [45, 75, 70, 80, 20, 30, 90],
+            data: [45, 75, 70, 80, 20, 30],
         }, {
             label: gettext('Business M.'),
             backgroundColor: 'rgba(0, 0, 0, 0.5)',
             borderColor: 'rgb(0, 0, 0)',
             hoverBorderWidth: 3,
-            data: [15, 75, 45, 90, 60, 30, 90],
+            data: [15, 75, 45, 90, 60, 30],
         }]
     };
 
@@ -311,25 +311,25 @@ $(document).ready(function () {
             backgroundColor: 'rgba(86, 224, 224, 0.5)',
             borderColor: 'rgb(86, 224, 224)',
             hoverBorderWidth: 3,
-            data: [0, 10, 5, 2, 20, 30, 45]
+            data: [0, 10, 5, 2, 20]
         }, {
             label: gettext("Civil eng."),
             backgroundColor: 'rgba(253, 174, 28, 0.5)',
             borderColor: 'rgb(253, 174, 28)',
             hoverBorderWidth: 3,
-            data: [20, 0, 15, 4, 6, 4, 60],
+            data: [20, 0, 15, 4, 6],
         }, {
             label: gettext("Architect."),
             backgroundColor: 'rgba(203, 31, 255, 0.5)',
             borderColor: 'rgb(203, 31, 255)',
             hoverBorderWidth: 3,
-            data: [85, 30, 34, 20, 20, 55, 45],
+            data: [85, 30, 34, 20, 20],
         }, {
             label: gettext("Economics"),
             backgroundColor: 'rgba(255, 19, 157, 0.5)',
             borderColor: 'rgb(255, 19, 157)',
             hoverBorderWidth: 3,
-            data: [45, 75, 70, 80, 20, 30, 90],
+            data: [45, 75, 70, 80, 20],
         }]
     };
     

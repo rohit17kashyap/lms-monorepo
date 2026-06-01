@@ -99,10 +99,12 @@ class UploadFormVideo(forms.ModelForm):
         model = UploadVideo
         fields = (
             "title",
+            "summary",
             "video",
         )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["title"].widget.attrs.update({"class": "form-control"})
+        self.fields["summary"].widget.attrs.update({"class": "form-control", "rows": 3})
         self.fields["video"].widget.attrs.update({"class": "form-control"})
