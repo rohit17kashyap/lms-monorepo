@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime
 from django.contrib.auth import get_user_model
 from django.conf import settings
@@ -23,12 +24,20 @@ def generate_lecturer_id():
     return f"{settings.LECTURER_ID_PREFIX}-{registered_year}-{lecturers_count}"
 
 
+def generate_user_id():
+    registered_year = datetime.now().strftime("%Y")
+    unique_id = str(uuid.uuid4())[:6]
+    return f"{registered_year}-{unique_id}"
+
+
 def generate_student_credentials():
-    return generate_student_id(), generate_password()
+    student_id = f"{settings.STUDENT_ID_PREFIX}-{generate_user_id()}"
+    return student_id, generate_password()
 
 
 def generate_lecturer_credentials():
-    return generate_lecturer_id(), generate_password()
+    lecturer_id = f"{settings.LECTURER_ID_PREFIX}-{generate_user_id()}"
+    return lecturer_id, generate_password()
 
 
 class EmailThread(threading.Thread):
