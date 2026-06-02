@@ -7,7 +7,11 @@ from django.contrib.auth.forms import (
 from django.contrib.auth.forms import PasswordResetForm
 from course.models import Program
 from .models import User, Student, Parent, RELATION_SHIP, LEVEL, GENDERS
-
+from .utils import (
+    generate_student_credentials,
+    generate_lecturer_credentials,
+    send_new_account_email,
+)
 
 class StaffAddForm(UserCreationForm):
     username = forms.CharField(
@@ -115,7 +119,16 @@ class StaffAddForm(UserCreationForm):
         user.email = self.cleaned_data.get("email")
 
         if commit:
+            username, password = generate_lecturer_credentials()
+            user.username = username
+            user.set_password(password)
+            # prevent signal from doing the same thing again
+            user._skip_auto_credentials = True
             user.save()
+            try:
+                send_new_account_email(user, password)
+            except Exception as e:
+                print(f"Failed to send email: {e}")
 
         return user
 
@@ -244,6 +257,7 @@ class StudentAddForm(UserCreationForm):
     @transaction.atomic()
     def save(self, commit=True):
         user = super().save(commit=False)
+
         user.is_student = True
         user.first_name = self.cleaned_data.get("first_name")
         user.last_name = self.cleaned_data.get("last_name")
@@ -254,12 +268,21 @@ class StudentAddForm(UserCreationForm):
         user.email = self.cleaned_data.get("email")
 
         if commit:
+            username, password = generate_student_credentials()
+            user.username = username
+            user.set_password(password)
+            # prevent signal from doing the same thing again
+            user._skip_auto_credentials = True
             user.save()
             Student.objects.create(
                 student=user,
                 level=self.cleaned_data.get("level"),
                 program=self.cleaned_data.get("program"),
             )
+            try:
+                send_new_account_email(user, password)
+            except Exception as e:
+                print(f"Failed to send email: {e}")
 
         return user
 
