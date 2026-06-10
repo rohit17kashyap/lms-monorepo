@@ -69,28 +69,14 @@
   pip install -r requirements.txt
   ```
 
-### Step 8: Fix Pillow Issue
+#### Fix Pillow Issue
 
 - If `Pillow==9.3.0` fails:
   - Use Python 3.11/3.12 instead of Python 3.14.
   - Recreate the virtual environment.
   - Reinstall requirements.
 
-### Step 9: Run Migrations
-
-- Generate migrations:
-
-  ```
-  python manage.py makemigrations
-  ```
-
-- Apply migrations:
-
-  ```
-  python manage.py migrate
-  ```
-
-### Step 10: Resolve the `pkg_resources` problem
+#### Resolve the `pkg_resources` problem
 
 - Install `setuptools` if not installed:
 
@@ -104,7 +90,21 @@
   pip install --force-reinstall setuptools==80.9.0
   ```
 
-### Step 11: Create Superuser
+### Step 8: Run Migrations
+
+- Generate migrations:
+
+  ```
+  python manage.py makemigrations
+  ```
+
+- Apply migrations:
+
+  ```
+  python manage.py migrate
+  ```
+
+### Step 9: Create Superuser
 
 - Create an admin account:
 
@@ -114,7 +114,7 @@
 
 - Enter username, email, and password when prompted.
 
-### Step 12: Run Django Server
+### Step 10: Run Django Server
 
 - Start the development server:
 
@@ -122,7 +122,7 @@
   python manage.py runserver
   ```
 
-### Step 13: Access the Project
+### Step 11: Access the Project
 
 - Open:
 
@@ -130,7 +130,7 @@
   http://127.0.0.1:8000/
   ```
 
-### Step 14: Access Django Admin Panel
+### Step 12: Access Django Admin Panel
 
 - Open:
 
