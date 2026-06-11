@@ -28,8 +28,15 @@
           <button type="submit" class="btn btn-primary" id="login-btn"><i class="fas fa-sign-in-alt"></i><small>{% trans 'SIGN IN' %}</small></button>
         </form>
         <br>
+        <!-- <div class="login-bottom">
+          <a href="{% url 'password_reset' %}" class="link">{% trans 'Forgot password ?' %}</a>
+        </div> -->
         <div class="login-bottom">
           <a href="{% url 'password_reset' %}" class="link">{% trans 'Forgot password ?' %}</a>
+          <br>
+          <br>
+          <span>{% trans "Don't have an account?" %}</span>
+          <a href="{% url 'register' %}" class="link">{% trans 'Register here' %}</a>
         </div>
       </div>
   </div>

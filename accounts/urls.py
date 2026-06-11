@@ -25,9 +25,15 @@ from .views import (
     edit_student_program,
     ParentAdd,
     validate_username,
-    register,
-    render_lecturer_pdf_list,  # new
-    render_student_pdf_list,  # new
+    # register,
+    render_lecturer_pdf_list,   # new
+    render_student_pdf_list,    # new
+)
+
+from .views_registration import (
+    register_choice_view,
+    student_register_view,
+    lecturer_register_view,
 )
 
 # from .forms import EmailValidationOnForgotPassword
@@ -48,21 +54,14 @@ urlpatterns = [
     path("student/add/", student_add_view, name="add_student"),
     path("student/<int:pk>/edit/", edit_student, name="student_edit"),
     path("students/<int:pk>/delete/", delete_student, name="student_delete"),
-    path(
-        "edit_student_program/<int:pk>/",
-        edit_student_program,
-        name="student_program_edit",
-    ),
+    path("edit_student_program/<int:pk>/", edit_student_program, name="student_program_edit"),
     path("parents/add/", ParentAdd.as_view(), name="add_parent"),
     path("ajax/validate-username/", validate_username, name="validate_username"),
-    path("register/", register, name="register"),
+    # path("register/", register, name="register"),
+    # new
     # paths to pdf
-    path(
-        "create_lecturers_pdf_list/", render_lecturer_pdf_list, name="lecturer_list_pdf"
-    ),  # new
-    path(
-        "create_students_pdf_list/", render_student_pdf_list, name="student_list_pdf"
-    ),  # new
+    path("create_lecturers_pdf_list/", render_lecturer_pdf_list, name="lecturer_list_pdf"),  # new
+    path("create_students_pdf_list/", render_student_pdf_list, name="student_list_pdf"),  
     # path('add-student/', StudentAddView.as_view(), name='add_student'),
     # path('programs/course/delete/<int:pk>/', course_delete, name='delete_course'),
     # Setting urls
@@ -88,5 +87,9 @@ urlpatterns = [
     #     template_name='registration/password_reset_complete.html'
     # ),
     #      name='password_reset_complete')
+    # self-registration paths
+    path("register/", register_choice_view, name="register"),
+    path("register/student/", student_register_view, name="student_register"),
+    path("register/lecturer/", lecturer_register_view, name="lecturer_register"),
     # ################################################################
 ]
