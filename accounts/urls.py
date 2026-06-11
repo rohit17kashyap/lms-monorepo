@@ -34,6 +34,7 @@ from .views_registration import (
     register_choice_view,
     student_register_view,
     lecturer_register_view,
+    registration_success_view,
 )
 
 # from .forms import EmailValidationOnForgotPassword
@@ -91,5 +92,6 @@ urlpatterns = [
     path("register/", register_choice_view, name="register"),
     path("register/student/", student_register_view, name="student_register"),
     path("register/lecturer/", lecturer_register_view, name="lecturer_register"),
+    path("register/success/", registration_success_view, name="registration_success"),
     # ################################################################
 ]

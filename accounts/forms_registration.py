@@ -1,11 +1,14 @@
 from django import forms
 from django.db import transaction
-from django.contrib.auth.forms import UserCreationForm
 from course.models import Program
 from .models import User, Student, LEVEL, GENDERS
-from .utils import generate_student_id, generate_lecturer_id 
+from .utils import (
+    generate_student_credentials, 
+    generate_lecturer_credentials,
+    send_new_account_email
+)
 
-class StudentRegistrationForm(UserCreationForm):
+class StudentRegistrationForm(forms.ModelForm):
     first_name = forms.CharField(
         max_length=30,
         widget=forms.TextInput(attrs={"class": "form-control"}),
@@ -53,7 +56,7 @@ class StudentRegistrationForm(UserCreationForm):
         ),
     )
 
-    class Meta(UserCreationForm.Meta):
+    class Meta:
         model = User
         fields = (
             "first_name",
@@ -64,15 +67,13 @@ class StudentRegistrationForm(UserCreationForm):
             "address",
             "level",
             "program",
-            "password1",
-            "password2",
         )
 
     @transaction.atomic()
     def save(self, commit=True):
         user = super().save(commit=False)
 
-        user.username = generate_student_id()
+        username, password = generate_student_credentials()
         user.is_student = True
 
         user.first_name = self.cleaned_data["first_name"]
@@ -82,6 +83,9 @@ class StudentRegistrationForm(UserCreationForm):
         user.phone = self.cleaned_data["phone"]
         user.address = self.cleaned_data["address"]
 
+        user.username = username
+        user.set_password(password)
+
         if commit:
             user.save()
 
@@ -90,10 +94,14 @@ class StudentRegistrationForm(UserCreationForm):
                 level=self.cleaned_data["level"],
                 program=self.cleaned_data["program"],
             )
+            try:
+                send_new_account_email(user, password)
+            except Exception as e:
+                print(f"Failed to send email: {e}")
 
         return user
 
-class LecturerRegistrationForm(UserCreationForm):
+class LecturerRegistrationForm(forms.ModelForm):
     first_name = forms.CharField(
         max_length=30,
         widget=forms.TextInput(attrs={"class": "form-control"}),
@@ -120,7 +128,7 @@ class LecturerRegistrationForm(UserCreationForm):
         required=False,
     )
 
-    class Meta(UserCreationForm.Meta):
+    class Meta:
         model = User
         fields = (
             "first_name",
@@ -128,15 +136,13 @@ class LecturerRegistrationForm(UserCreationForm):
             "email",
             "phone",
             "address",
-            "password1",
-            "password2",
         )
 
     @transaction.atomic()
     def save(self, commit=True):
         user = super().save(commit=False)
-
-        user.username = generate_lecturer_id()
+        
+        username, password = generate_lecturer_credentials()
         user.is_lecturer = True
 
         user.first_name = self.cleaned_data["first_name"]
@@ -145,7 +151,15 @@ class LecturerRegistrationForm(UserCreationForm):
         user.phone = self.cleaned_data["phone"]
         user.address = self.cleaned_data["address"]
 
+        user.username = username
+        user.set_password(password)
+
         if commit:
             user.save()
+            try:
+                send_new_account_email(user, password)
+            except Exception as e:
+                print(f"Failed to send email: {e}")
+
 
         return user

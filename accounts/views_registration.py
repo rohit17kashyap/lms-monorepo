@@ -20,7 +20,7 @@ def student_register_view(request):
                 request,
                 "Student account created successfully."
             )
-            return redirect("login")
+            return redirect("registration_success")
     else:
         form = StudentRegistrationForm()
     return render(
@@ -38,11 +38,17 @@ def lecturer_register_view(request):
                 request,
                 "Lecturer account created successfully."
             )
-            return redirect("login")
+            return redirect("registration_success")
     else:
         form = LecturerRegistrationForm()
     return render(
         request,
         "accounts/register/lecturer.html",
         {"form": form},
+    )
+
+def registration_success_view(request):
+    return render(
+        request,
+        "accounts/register/success.html",
     )
