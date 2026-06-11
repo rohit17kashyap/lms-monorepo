@@ -9,36 +9,36 @@ from core.utils import send_html_email
 def generate_password():
     return get_user_model().objects.make_random_password()
 
+# Old ID Generation Logic
+# def generate_student_id():
+#     # Generate a username based on first and last name and registration date
+#     registered_year = datetime.now().strftime("%Y")
+#     students_count = get_user_model().objects.filter(is_student=True).count()
+#     return f"{settings.STUDENT_ID_PREFIX}-{registered_year}-{students_count}"
 
-def generate_student_id():
-    # Generate a username based on first and last name and registration date
-    registered_year = datetime.now().strftime("%Y")
-    students_count = get_user_model().objects.filter(is_student=True).count()
-    return f"{settings.STUDENT_ID_PREFIX}-{registered_year}-{students_count}"
-
-
-def generate_lecturer_id():
-    # Generate a username based on first and last name and registration date
-    registered_year = datetime.now().strftime("%Y")
-    lecturers_count = get_user_model().objects.filter(is_lecturer=True).count()
-    return f"{settings.LECTURER_ID_PREFIX}-{registered_year}-{lecturers_count}"
-
+# def generate_lecturer_id():
+#     # Generate a username based on first and last name and registration date
+#     registered_year = datetime.now().strftime("%Y")
+#     lecturers_count = get_user_model().objects.filter(is_lecturer=True).count()
+#     return f"{settings.LECTURER_ID_PREFIX}-{registered_year}-{lecturers_count}"
 
 def generate_user_id():
     registered_year = datetime.now().strftime("%Y")
     unique_id = str(uuid.uuid4())[:6]
     return f"{registered_year}-{unique_id}"
 
+# New ID Generation Logic
+def generate_student_id():
+    return f"{settings.STUDENT_ID_PREFIX}-{generate_user_id()}"
+
+def generate_lecturer_id():
+    return f"{settings.LECTURER_ID_PREFIX}-{generate_user_id()}"
 
 def generate_student_credentials():
-    student_id = f"{settings.STUDENT_ID_PREFIX}-{generate_user_id()}"
-    return student_id, generate_password()
-
+    return generate_student_id(), generate_password()
 
 def generate_lecturer_credentials():
-    lecturer_id = f"{settings.LECTURER_ID_PREFIX}-{generate_user_id()}"
-    return lecturer_id, generate_password()
-
+    return generate_lecturer_id(), generate_password()
 
 class EmailThread(threading.Thread):
     def __init__(self, subject, recipient_list, template_name, context):
