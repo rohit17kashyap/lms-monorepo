@@ -1,0 +1,28 @@
+import express from 'express';
+import cors from 'cors';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import chatRoutes from './routes/chatRoutes.js';
+
+dotenv.config({ path: '../.env' });
+
+const app = express();
+const PORT = process.env.PORT || 5002;
+
+app.use(cors({ origin: process.env.CLIENT_URL }));
+app.use(express.json());
+
+app.use('/api/chat', chatRoutes);
+
+mongoose
+  .connect(process.env.MONGODB_URI)
+  .then(() => {
+    console.log('✅ MongoDB connected');
+    app.listen(PORT, () => {
+      console.log(`🚀 Chat server running on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error('❌ MongoDB connection error:', err.message);
+    process.exit(1);
+  });
