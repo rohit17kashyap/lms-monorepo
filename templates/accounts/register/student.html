@@ -1,10 +1,25 @@
-<h2>Student Registration</h2>
+{% extends 'registration/registration_base.html' %}
+{% load i18n %}
+{% block title %}{% trans 'Dj Learning Management System - Register' %}{% endblock title %}
+{% load crispy_forms_tags %}
+{% block content %}
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
+<div class="col-md-4 mx-auto mt-5">
+    <div class="card">
+        <div class="form-title">
+            <i class="fas fa-user-graduate me-2"></i>
+            {% trans 'Student Registration' %}
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary w-100">
+                    Register
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
 
-    <button type="submit">
-        Register
-    </button>
-</form>
+{% endblock content %}

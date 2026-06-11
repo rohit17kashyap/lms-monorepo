@@ -13,7 +13,7 @@
     <div class="card-body">
         <form action="" method="POST" id="login-form">{% csrf_token %}
           <div class="form-group mb-3">
-              <label class="mb-2" for="username_id"><i class="fas fa-address-card me-2"></i>{% trans 'ID Number' %}</label>
+              <label class="mb-2" for="username_id"><i class="fas fa-address-card me-2"></i>{% trans 'Username' %}</label>
               <input type="text" name="username" id="username_id" class="form-control" required>
               <div id="message-wrapper"></div>
           </div>
@@ -22,21 +22,17 @@
               <input type="password" name="password" id="password_id" class="form-control" required>
           </div>
           {% if form.errors %}
-                <span class="text-danger"><i class="fas fa-exclamation-circle"></i> {% trans 'Invalid ID & Password.' %}</span><br>
+            <span class="text-danger"><i class="fas fa-exclamation-circle"></i> {% trans 'Invalid ID & Password.' %}</span><br>
           {% endif %}
       
-          <button type="submit" class="btn btn-primary" id="login-btn"><i class="fas fa-sign-in-alt"></i><small>{% trans 'SIGN IN' %}</small></button>
+          <button type="submit" class="btn btn-primary w-100" id="login-btn"><i class="fas fa-sign-in-alt"></i><small>{% trans 'SIGN IN' %}</small></button>
         </form>
-        <br>
-        <!-- <div class="login-bottom">
-          <a href="{% url 'password_reset' %}" class="link">{% trans 'Forgot password ?' %}</a>
-        </div> -->
-        <div class="login-bottom">
-          <a href="{% url 'password_reset' %}" class="link">{% trans 'Forgot password ?' %}</a>
-          <br>
-          <br>
-          <span>{% trans "Don't have an account?" %}</span>
-          <a href="{% url 'register' %}" class="link">{% trans 'Register here' %}</a>
+        <div class="login-bottom pt-2">
+          <a href="{% url 'password_reset' %}" class="link">{% trans 'Forgot password?' %}</a>
+          <div class="pt-4 text-center">
+            <span>{% trans "Don't have an account?" %}</span>
+            <a class="fw-bold" href="{% url 'register' %}" class="link">{% trans 'Register here' %}</a>
+          </div>
         </div>
       </div>
   </div>

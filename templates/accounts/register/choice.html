@@ -1,11 +1,33 @@
-<h2>Register</h2>
+{% extends 'registration/registration_base.html' %}
+{% load i18n %}
+{% block title %}{% trans 'Dj Learning Management System - Register' %}{% endblock title %}
+{% load crispy_forms_tags %}
+{% block content %}
 
-<a href="{% url 'student_register' %}">
-    Register as Student
-</a>
+<div class="col-md-5 mx-auto mt-5">
+    <div class="card">
+        <div class="form-title">
+            <i class="fas fa-user-plus me-2"></i>
+            {% trans 'Register' %}
+        </div>
+        <div class="card-body text-center">
+            <div class="pt-2 pb-3">
+                <a href="{% url 'student_register' %}">
+                    <i class="fas fa-user-graduate me-2"></i>
+                    {% trans 'As Student' %}
+                </a>
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                <a href="{% url 'lecturer_register' %}">
+                    <i class="fas fa-chalkboard-teacher me-2"></i>
+                    {% trans 'As Lecturer' %}
+                </a>
+            </div>
+            <div class="login-bottom pt-2">
+                <span>{% trans "Already have an account?" %}</span>
+                <a class="fw-bold" href="{% url 'login' %}" class="link">{% trans 'Login here' %}</a>
+            </div>
+        </div>
+    </div>
+</div>
 
-<br><br>
-
-<a href="{% url 'lecturer_register' %}">
-    Register as Lecturer
-</a>
+{% endblock content %}
