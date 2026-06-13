@@ -29,9 +29,10 @@
         </form>
         <div class="login-bottom pt-2">
           <a href="{% url 'password_reset' %}" class="link">{% trans 'Forgot password?' %}</a>
-          <div class="pt-4 text-center">
+          <hr>
+          <div class="text-center">
             <span>{% trans "Don't have an account?" %}</span>
-            <a class="fw-bold" href="{% url 'register' %}" class="link">{% trans 'Register here' %}</a>
+            <a href="{% url 'register' %}" class="link">{% trans 'Register here' %}</a>
           </div>
         </div>
       </div>

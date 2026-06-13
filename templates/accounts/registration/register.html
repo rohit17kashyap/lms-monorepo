@@ -1,0 +1,77 @@
+{% extends 'registration/registration_base.html' %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+{% trans 'Register | Learning Management System' %}
+{% endblock title %}
+
+{% block content %}
+
+<div class="col-md-4 mx-auto mt-5">
+    <div class="card">
+
+        <div class="form-title">
+            <i class="fas fa-user-plus me-2"></i>
+            {% trans 'Create Account' %}
+        </div>
+
+        <div class="card-body">
+
+            <form method="post">
+                {% csrf_token %}
+
+                <!-- Role field rendered manually -->
+                <div class="mb-4">
+                    <label class="form-label fw-bold">
+                        {{ form.role.label }}
+                    </label>
+
+                    <div class="d-flex gap-4">
+                        {% for radio in form.role %}
+                            <div class="form-check me-4">
+                                {{ radio.tag }}
+                                <label class="form-check-label ms-1">
+                                    {{ radio.choice_label }}
+                                </label>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    {% if form.role.errors %}
+                        <div class="text-danger mt-1">
+                            {{ form.role.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Remaining fields -->
+                {{ form.first_name|as_crispy_field }}
+                {{ form.last_name|as_crispy_field }}
+                {{ form.email|as_crispy_field }}
+
+                <div class="d-grid mt-3">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-user-plus me-2"></i>
+                        {% trans 'Register' %}
+                    </button>
+                </div>
+
+            </form>
+
+            <hr>
+
+            <div class="text-center">
+                <span>{% trans 'Already have an account?' %}</span>
+
+                <a href="{% url 'login' %}" class=" fw-bold link">
+                    {% trans 'Login' %}
+                </a>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+{% endblock content %}

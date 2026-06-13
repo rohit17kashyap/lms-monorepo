@@ -1,54 +1,29 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .forms_registration import (
-    StudentRegistrationForm,
-    LecturerRegistrationForm,
-)
+from .forms_registration import RegistrationForm
 
-def register_choice_view(request):
-    return render(
-        request,
-        "accounts/register/choice.html",
-    )
-
-def student_register_view(request):
+def register_view(request):
     if request.method == "POST":
-        form = StudentRegistrationForm(request.POST)
+        form = RegistrationForm(request.POST)
+        
         if form.is_valid():
             form.save()
             messages.success(
                 request,
-                "Student account created successfully."
+                "Account created successfully."
             )
             return redirect("registration_success")
     else:
-        form = StudentRegistrationForm()
-    return render(
-        request,
-        "accounts/register/student.html",
-        {"form": form},
-    )
+        form = RegistrationForm()
 
-def lecturer_register_view(request):
-    if request.method == "POST":
-        form = LecturerRegistrationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(
-                request,
-                "Lecturer account created successfully."
-            )
-            return redirect("registration_success")
-    else:
-        form = LecturerRegistrationForm()
     return render(
         request,
-        "accounts/register/lecturer.html",
+        "accounts/registration/register.html",
         {"form": form},
     )
 
 def registration_success_view(request):
     return render(
         request,
-        "accounts/register/success.html",
+        "accounts/registration/success.html",
     )
