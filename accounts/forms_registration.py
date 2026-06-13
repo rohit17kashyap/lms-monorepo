@@ -44,29 +44,11 @@ class RegistrationForm(forms.ModelForm):
         )
 
     def clean_email(self):
-        email = self.cleaned_data["email"].strip()
-        role = self.cleaned_data.get("role")
-
-        if role == "student":
-            exists = User.objects.filter(
-                email__iexact=email,
-                is_student=True 
-            ).exists()
-
-        elif role == "lecturer":
-            exists = User.objects.filter(
-                email__iexact=email,
-                is_lecturer=True
-            ).exists()
-
-        else:
-            exists = False
-
-        if exists:
+        email = self.cleaned_data["email"]
+        if User.objects.filter(email__iexact=email).exists():
             raise forms.ValidationError(
-                f"A {role} account with this email already exists."
+                "An account with this email already exists."
             )
-
         return email
 
     @transaction.atomic()

@@ -33,6 +33,10 @@ ALLOWED_HOSTS = ["127.0.0.1", "localhost", "adilmohak1.pythonanywhere.com"]
 # change the default user models to our custom model
 AUTH_USER_MODEL = "accounts.User"
 
+# Allow login via email as well
+AUTHENTICATION_BACKENDS = [
+    "accounts.backends.EmailOrUsernameBackend",
+]
 # Application definition
 
 DJANGO_APPS = [

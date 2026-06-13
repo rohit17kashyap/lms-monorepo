@@ -105,6 +105,14 @@ class StaffAddForm(UserCreationForm):
         required=False,
     )
 
+    def clean_email(self):
+        email = self.cleaned_data["email"]
+        if User.objects.filter(email__iexact=email).exists():
+            raise forms.ValidationError(
+                "An account with this email already exists."
+            )
+        return email
+
     class Meta(UserCreationForm.Meta):
         model = User
 
@@ -254,6 +262,14 @@ class StudentAddForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = User
 
+    def clean_email(self):
+        email = self.cleaned_data["email"]
+        if User.objects.filter(email__iexact=email).exists():
+            raise forms.ValidationError(
+                "An account with this email already exists."
+            )
+        return email
+    
     @transaction.atomic()
     def save(self, commit=True):
         user = super().save(commit=False)

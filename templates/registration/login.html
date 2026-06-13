@@ -13,7 +13,7 @@
     <div class="card-body">
         <form action="" method="POST" id="login-form">{% csrf_token %}
           <div class="form-group mb-3">
-              <label class="mb-2" for="username_id"><i class="fas fa-address-card me-2"></i>{% trans 'Username' %}</label>
+              <label class="mb-2" for="username_id"><i class="fas fa-envelope me-2"></i>{% trans 'Email' %}</label>
               <input type="text" name="username" id="username_id" class="form-control" required>
               <div id="message-wrapper"></div>
           </div>
@@ -22,7 +22,7 @@
               <input type="password" name="password" id="password_id" class="form-control" required>
           </div>
           {% if form.errors %}
-            <span class="text-danger"><i class="fas fa-exclamation-circle"></i> {% trans 'Invalid ID & Password.' %}</span><br>
+            <span class="text-danger"><i class="fas fa-exclamation-circle"></i> {% trans 'Invalid Email or Password.' %}</span><br>
           {% endif %}
       
           <button type="submit" class="btn btn-primary w-100" id="login-btn"><i class="fas fa-sign-in-alt"></i><small>{% trans 'SIGN IN' %}</small></button>
