@@ -150,9 +150,27 @@
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: rgba(255,255,255,0.1) transparent;
+  position: relative;
   background:
     radial-gradient(ellipse at top, rgba(13,148,136,0.12) 0%, transparent 65%),
     linear-gradient(160deg, #1a2744 0%, #0d1520 100%);
+}
+.chat-body::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 270px;
+  height: 270px;
+  background-image: url('/cdac_logo_transparent.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.28;
+  pointer-events: none;
+  z-index: 0;
+  filter: brightness(1.8) contrast(1.2);
 }
 .chat-body::-webkit-scrollbar { width: 3px; }
 .chat-body::-webkit-scrollbar-thumb {
@@ -189,12 +207,78 @@
   100% { background-position: -200% 0; }
 }
 
+/* ===== CATEGORIES SCREEN ===== */
+.categories-screen {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Keep all content above the watermark */
+.categories-screen,
+.question-list,
+.answer-container,
+.dropdown-toggle,
+.category-menu {
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== DROPDOWN TOGGLE ===== */
+.dropdown-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: calc(100% - 24px);
+  margin: 14px 12px 8px;
+  padding: 14px 18px;
+  background: linear-gradient(135deg, rgba(13,148,136,0.25), rgba(15,118,110,0.15));
+  border: 1px solid rgba(13,148,136,0.4);
+  border-radius: 14px;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  text-align: left;
+  line-height: 1.4;
+}
+.dropdown-toggle span:first-child {
+  flex: 1;
+}
+.dropdown-toggle:hover {
+  background: linear-gradient(135deg, rgba(13,148,136,0.35), rgba(15,118,110,0.25));
+  border-color: rgba(13,148,136,0.6);
+}
+.dropdown-chevron {
+  font-size: 16px;
+  color: #5eead4;
+  transition: transform 0.25s ease;
+}
+.dropdown-toggle.open .dropdown-chevron {
+  transform: rotate(180deg);
+}
+
 /* ===== CATEGORY MENU ===== */
 .category-menu {
   display: flex;
   flex-direction: column;
   gap: 7px;
-  padding: 6px 12px 16px;
+  padding: 0 12px;
+  overflow: hidden;
+  transition: max-height 0.3s ease, opacity 0.25s ease, padding 0.25s ease;
+}
+.category-menu.collapsed {
+  max-height: 0;
+  opacity: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.category-menu.expanded {
+  max-height: 600px;
+  opacity: 1;
+  padding-bottom: 12px;
 }
 
 .category-card {

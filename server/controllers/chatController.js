@@ -63,9 +63,16 @@ export const sendMessage = async (req, res) => {
   }
 };
 
+const ROLE_MAP = {
+  student: 'student', teacher: 'teacher', lecturer: 'teacher',
+  admin: 'admin', administrator: 'admin', staff: 'admin',
+};
+
 export const getAllFaqs = async (req, res) => {
   try {
-    const faqs = await Faq.find({ isActive: true });
+    const rawRole = (req.query.role || 'student').toLowerCase().trim();
+    const role = ROLE_MAP[rawRole] || 'student';
+    const faqs = await Faq.find({ isActive: true, role });
     return res.json({ success: true, faqs });
   } catch (err) {
     console.error('getAllFaqs error:', err);
