@@ -2,7 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import chatRoutes from './routes/chatRoutes.js';
+import chatRoutes   from './routes/chatRoutes.js';
+import ticketRoutes from './routes/ticketRoutes.js';
 
 dotenv.config({ path: '../.env' });
 
@@ -12,7 +13,8 @@ const PORT = process.env.PORT || 5002;
 app.use(cors({ origin: process.env.CLIENT_URL }));
 app.use(express.json());
 
-app.use('/api/chat', chatRoutes);
+app.use('/api/chat',    chatRoutes);
+app.use('/api/tickets', ticketRoutes);
 
 mongoose
   .connect(process.env.MONGODB_URI)
