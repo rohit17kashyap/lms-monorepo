@@ -10,9 +10,13 @@ from .models import UserSession
 
 @receiver(user_logged_in)
 def create_user_session(sender, request, user, **kwargs):
+    if not request.session.session_key:
+        request.session.save()
+
+    session_key = request.session.session_key
 
     UserSession.objects.update_or_create(
-        session_key=request.session.session_key,
+        session_key=session_key,
         defaults={
             "user": user,
             "ip_address": get_client_ip(request),
@@ -32,8 +36,10 @@ def close_user_session(sender, request, user, **kwargs):
     if request is None:
         return
 
+    session_key = request.session.session_key
+
     UserSession.objects.filter(
-        session_key=request.session.session_key
+        session_key=session_key
     ).update(
         is_active=False,
         logout_time=timezone.now(),
