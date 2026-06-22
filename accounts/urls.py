@@ -28,6 +28,9 @@ from .views import (
     # register,
     render_lecturer_pdf_list,   # new
     render_student_pdf_list,    # new
+    user_sessions,
+    logout_session,
+    logout_other_sessions,
 )
 
 from .views_registration import (
@@ -89,5 +92,8 @@ urlpatterns = [
     # self-registration paths
     path("register/", register_view, name="register"),
     path("register/success/", registration_success_view, name="registration_success"),
+    path("sessions/", user_sessions, name="user_sessions"),
+    path("sessions/logout/<str:session_key>/", logout_session, name="logout_session"),
+    path("sessions/logout-others/", logout_other_sessions, name="logout_other_sessions"),
     # ################################################################
 ]

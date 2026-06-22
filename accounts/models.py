@@ -1,11 +1,12 @@
 from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import AbstractUser, UserManager
-from django.contrib.sessions.models import Session
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from django.db.models import Q
 from PIL import Image
+from datetime import timedelta
+from django.utils import timezone
 
 from course.models import Program
 from .validators import ASCIIUsernameValidator
@@ -98,6 +99,20 @@ class User(AbstractUser):
     def __str__(self):
         return "{} ({})".format(self.username, self.get_full_name)
 
+    @property
+    def is_online(self):
+        latest_session = (
+            self.sessions
+            .filter(is_active=True)
+            .order_by("-last_activity")
+            .first()
+        )
+
+        if not latest_session:
+            return False
+
+        return latest_session.is_online
+    
     @property
     def get_user_role(self):
         if self.is_superuser:
@@ -212,6 +227,7 @@ class DepartmentHead(models.Model):
     def __str__(self):
         return "{}".format(self.user)
 
+
 class UserSession(models.Model):
     user = models.ForeignKey(
         User,
@@ -249,6 +265,42 @@ class UserSession(models.Model):
     is_active = models.BooleanField(
         default=True,
     )
+
+    @property
+    def is_online(self):
+        return (
+            self.is_active and
+            self.last_activity >= timezone.now() - timedelta(minutes=5)
+        )
+    
+    @property
+    def device_name(self):
+        agent = self.user_agent.lower()
+
+        browser = "Unknown Browser"
+        os = "Unknown OS"
+
+        if "chrome" in agent and "edg" not in agent:
+            browser = "Chrome"
+        elif "firefox" in agent:
+            browser = "Firefox"
+        elif "safari" in agent and "chrome" not in agent:
+            browser = "Safari"
+        elif "edg" in agent:
+            browser = "Edge"
+
+        if "mac os" in agent:
+            os = "macOS"
+        elif "windows" in agent:
+            os = "Windows"
+        elif "android" in agent:
+            os = "Android"
+        elif "iphone" in agent:
+            os = "iPhone"
+        elif "linux" in agent:
+            os = "Linux"
+
+        return f"{browser} on {os}"
 
     class Meta:
         ordering = ("-last_activity",)

@@ -29,7 +29,10 @@ from xhtml2pdf import pisa
 from django.template.loader import (
     render_to_string,
 )  # to render a template into a string
-
+from django.utils import timezone
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404
+from .models import UserSession
 
 def validate_username(request):
     username = request.GET.get("username", None)
@@ -540,3 +543,71 @@ class ParentAdd(CreateView):
 #             return redirect('student_list')
 #     else:
 #         form = ParentAddForm(request.POST)
+
+
+@login_required
+def user_sessions(request):
+
+    sessions = UserSession.objects.filter(
+        user=request.user
+    )
+
+    current_session = request.session.session_key
+
+    return render(
+        request,
+        "accounts/sessions.html",
+        {
+            "sessions": sessions,
+            "current_session": current_session,
+        },
+    )
+
+
+@login_required
+def logout_session(request, session_key):
+
+    session = get_object_or_404(
+        UserSession,
+        user=request.user,
+        session_key=session_key,
+    )
+
+    from django.contrib.sessions.models import Session
+
+    Session.objects.filter(
+        session_key=session_key
+    ).delete()
+
+    session.is_active = False
+    session.logout_time = timezone.now()
+    session.save()
+
+    return redirect("user_sessions")
+
+
+@login_required
+def logout_other_sessions(request):
+
+    current_session = request.session.session_key
+
+    other_sessions = UserSession.objects.filter(
+        user=request.user,
+        is_active=True,
+    ).exclude(
+        session_key=current_session
+    )
+
+    from django.contrib.sessions.models import Session
+
+    for session in other_sessions:
+
+        Session.objects.filter(
+            session_key=session.session_key
+        ).delete()
+
+        session.is_active = False
+        session.logout_time = timezone.now()
+        session.save()
+
+    return redirect("user_sessions")
