@@ -611,3 +611,54 @@ def logout_other_sessions(request):
         session.save()
 
     return redirect("user_sessions")
+
+
+@login_required
+def user_session_admin(request, user_id):
+
+    if not request.user.is_superuser:
+        return redirect("home")
+
+    selected_user = get_object_or_404(
+        User,
+        pk=user_id,
+    )
+
+    sessions = UserSession.objects.filter(
+        user=selected_user
+    )
+
+    return render(
+        request,
+        "accounts/admin_sessions.html",
+        {
+            "title": "User Sessions",
+            "selected_user": selected_user,
+            "sessions": sessions,
+        },
+    )
+
+
+@login_required
+def admin_logout_session(request, session_id):
+
+    if not request.user.is_superuser:
+        return redirect("home")
+
+    session = get_object_or_404(
+        UserSession,
+        pk=session_id,
+    )
+
+    Session.objects.filter(
+        session_key=session.session_key
+    ).delete()
+
+    session.is_active = False
+    session.logout_time = timezone.now()
+    session.save()
+
+    return redirect(
+        "admin_user_sessions",
+        user_id=session.user.id,
+    )

@@ -308,3 +308,59 @@ def semester_delete_view(request, pk):
         semester.delete()
         messages.success(request, "Semester successfully deleted")
     return redirect("semester_list")
+
+
+# Admin session view
+@login_required
+@admin_required
+def user_session_admin(request, user_id):
+
+    user = get_object_or_404(User, pk=user_id)
+
+    sessions = UserSession.objects.filter(
+        user=user
+    )
+
+    current_session = None
+
+    return render(
+        request,
+        "accounts/admin_sessions.html",
+        {
+            "title": f"{user.get_full_name()} Sessions",
+            "selected_user": user,
+            "sessions": sessions,
+            "current_session": current_session,
+        },
+    )
+
+# Force logout
+@login_required
+@admin_required
+def admin_logout_session(request, session_id):
+
+    session = get_object_or_404(
+        UserSession,
+        pk=session_id,
+    )
+
+    from django.contrib.sessions.models import Session
+    from django.utils import timezone
+
+    Session.objects.filter(
+        session_key=session.session_key
+    ).delete()
+
+    session.is_active = False
+    session.logout_time = timezone.now()
+    session.save()
+
+    messages.success(
+        request,
+        "Session terminated successfully."
+    )
+
+    return redirect(
+        "admin_user_sessions",
+        user_id=session.user.id,
+    )
