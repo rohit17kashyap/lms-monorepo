@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import User, Student, Parent
-
+from .models import UserSession
 
 class UserAdmin(admin.ModelAdmin):
     list_display = [
@@ -33,3 +33,22 @@ class UserAdmin(admin.ModelAdmin):
 admin.site.register(User, UserAdmin)
 admin.site.register(Student)
 admin.site.register(Parent)
+
+@admin.register(UserSession)
+class UserSessionAdmin(admin.ModelAdmin):
+    list_display = (
+        "user",
+        "ip_address",
+        "login_time",
+        "last_activity",
+        "is_active",
+    )
+
+    list_filter = (
+        "is_active",
+    )
+
+    search_fields = (
+        "user__email",
+        "user__username",
+    )

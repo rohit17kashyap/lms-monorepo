@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import AbstractUser, UserManager
+from django.contrib.sessions.models import Session
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from django.db.models import Q
@@ -210,3 +211,50 @@ class DepartmentHead(models.Model):
 
     def __str__(self):
         return "{}".format(self.user)
+
+class UserSession(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="sessions",
+    )
+
+    session_key = models.CharField(
+        max_length=40,
+        unique=True,
+    )
+
+    ip_address = models.GenericIPAddressField(
+        null=True,
+        blank=True,
+    )
+
+    user_agent = models.TextField(
+        blank=True,
+    )
+
+    login_time = models.DateTimeField(
+        auto_now_add=True,
+    )
+
+    last_activity = models.DateTimeField(
+        auto_now=True,
+    )
+
+    logout_time = models.DateTimeField(
+        null=True,
+        blank=True,
+    )
+
+    is_active = models.BooleanField(
+        default=True,
+    )
+
+    class Meta:
+        ordering = ("-last_activity",)
+
+    def __str__(self):
+        return (
+            f"{self.user.email} - "
+            f"{self.session_key[:8]}"
+        )
