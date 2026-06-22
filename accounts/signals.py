@@ -1,10 +1,14 @@
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from .models import User
+
 from .utils import (
     generate_student_credentials,
     generate_lecturer_credentials,
     send_new_account_email,
 )
 
-
+@receiver(post_save, sender=User)
 def post_save_account_receiver(sender, instance=None, created=False, *args, **kwargs):
     """
     For new students/lecturers with no password yet, assign ID + password and email them.

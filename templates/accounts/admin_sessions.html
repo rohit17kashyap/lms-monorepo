@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}
+{{ title }} | {% trans 'Learning management system' %}
+{% endblock title %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="card">
+
+        <div class="form-title">
+            <i class="fas fa-user-shield me-2"></i>
+            {% trans 'User Sessions' %}
+        </div>
+
+        <div class="card-body">
+
+            <div class="mb-4">
+                <h5 class="fw-bold mb-1">
+                    {{ selected_user.get_full_name }}
+                </h5>
+
+                <div class="text-muted">
+                    {{ selected_user.email }}
+                </div>
+            </div>
+
+            {% for session in sessions %}
+
+            <div class="card shadow-sm mb-4 border-0">
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+
+                        <div>
+                            <h5 class="mb-1 fw-bold">
+                                {{ session.device_name }}
+                            </h5>
+
+                            <div class="text-muted">
+                                Session #{{ forloop.counter }}
+                            </div>
+                        </div>
+
+                        {% if session.is_active %}
+                            {% if session.is_online %}
+                                <span class="badge bg-success px-3 py-2">
+                                    Online
+                                </span>
+                            {% else %}
+                                <span class="badge bg-warning text-dark px-3 py-2">
+                                    Inactive
+                                </span>
+                            {% endif %}
+                        {% else %}
+                            <span class="badge bg-secondary px-3 py-2">
+                                Ended
+                            </span>
+                        {% endif %}
+
+                    </div>
+
+                    <hr>
+
+                    {% if session.login_time %}
+                    <div class="row mb-3">
+                        <div class="col-md-3 fw-bold">
+                            Login Time
+                        </div>
+
+                        <div class="col-md-9">
+                            {{ session.login_time|date:"M d, Y h:i A" }}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="row mb-3">
+                        <div class="col-md-3 fw-bold">
+                            Last Activity
+                        </div>
+
+                        <div class="col-md-9">
+                            {{ session.last_activity|date:"M d, Y h:i A" }}
+                        </div>
+                    </div>
+
+                    {% if session.logout_time %}
+                    <div class="row mb-3">
+                        <div class="col-md-3 fw-bold">
+                            Logout Time
+                        </div>
+
+                        <div class="col-md-9">
+                            {{ session.logout_time|date:"M d, Y h:i A" }}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if session.is_active %}
+                    <div class="mt-3">
+                        <a href="{% url 'admin_logout_session' session.id %}"
+                           class="btn btn-outline-primary">
+                            Terminate Session
+                        </a>
+                    </div>
+                    {% else %}
+                    <div class="mt-3 text-muted">
+                        Session Ended
+                    </div>
+                    {% endif %}
+
+                </div>
+            </div>
+
+            {% empty %}
+
+            <div class="alert alert-info">
+                No sessions found.
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
