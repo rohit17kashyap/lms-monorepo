@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}
+{{ title }} | {% trans 'Learning management system' %}
+{% endblock title %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="card">
+
+        <div class="form-title">
+            <i class="fas fa-desktop me-2"></i>
+            {% trans 'My Sessions' %}
+        </div>
+
+        <div class="card-body">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <p class="text-muted mb-0">
+                    {% trans 'Manage your active sessions across devices.' %}
+                </p>
+
+                <a href="{% url 'logout_other_sessions' %}"
+                   class="btn btn-primary">
+                    Logout Other Devices
+                </a>
+            </div>
+
+            {% for session in sessions %}
+
+            <div class="card shadow-sm mb-4 border-0">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <h5 class="mb-1">
+                               {% if session.session_key == current_session %}
+                                    <h5 class="mb-1 fw-bold">
+                                        Current Device
+                                    </h5>
+                                {% else %}
+                                    <h5 class="mb-1 fw-bold">
+                                        Inactive Session
+                                    </h5>
+                                {% endif %}
+                            </h5>
+
+                            <div class="text-muted">
+                                {{ session.device_name }}
+                            </div>
+                        </div>
+
+                        {% if session.is_online %}
+                            <span class="badge bg-success px-3 py-2">
+                                Online
+                            </span>
+                        {% else %}
+                            <span class="badge bg-secondary px-3 py-2">
+                                Offline
+                            </span>
+                        {% endif %}
+
+                    </div>
+
+                    <hr>
+
+                    <div class="row mb-3">
+                        <div class="col-md-3 fw-bold">
+                            Last Activity
+                        </div>
+
+                        <div class="col-md-9">
+                            {{ session.last_activity }}
+                        </div>
+                    </div>
+
+                    {% if session.login_time %}
+                    <div class="row mb-3">
+                        <div class="col-md-3 fw-bold">
+                            Login Time
+                        </div>
+
+                        <div class="col-md-9">
+                            {{ session.login_time }}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if session.logout_time %}
+                    <div class="row mb-3">
+                        <div class="col-md-3 fw-bold">
+                            Logout Time
+                        </div>
+                        <div class="col-md-9">
+                            {{ session.logout_time }}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="mt-3">
+                        {% if session.session_key != current_session %}
+                            {% if session.is_active %}
+                                <a href="{% url 'logout_session' session.session_key %}"
+                                class="btn btn-outline-primary">
+                                    Logout Session
+                                </a>
+                            {% else %}
+                                <span class="text-muted">
+                                    Session Ended
+                                </span>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            {% empty %}
+
+            <div class="alert alert-info">
+                No sessions found.
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
