@@ -150,3 +150,10 @@ media/result_sheet/*
 # Custom
 dump.rdb
 *.DS_Store
+
+# GitHub config
+.github
+
+# IDE config
+.idea
+.vscode
