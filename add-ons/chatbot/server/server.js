@@ -10,7 +10,8 @@ dotenv.config({ path: '../.env' });
 const app = express();
 const PORT = process.env.PORT || 5002;
 
-app.use(cors({ origin: process.env.CLIENT_URL }));
+const allowedOrigins = /^http:\/\/localhost(:\d+)?$/;
+app.use(cors({ origin: (origin, cb) => cb(null, !origin || allowedOrigins.test(origin)) }));
 app.use(express.json());
 
 app.use('/api/chat',    chatRoutes);
