@@ -76,6 +76,29 @@ npm install --silent
 
 Write-Host "  Chatbot client setup complete!" -ForegroundColor Green
 
+# ── 4. Live Streaming Server ──────────────────────────────────
+Write-Host "`n[4/5] Setting up Live Streaming Server..." -ForegroundColor Cyan
+
+$liveServerPath = Join-Path $root "add-ons\live-streaming\server"
+Set-Location $liveServerPath
+
+Write-Host "  Installing Node dependencies (including nodemon)..."
+npm install --silent
+npm install nodemon --save-dev --silent
+
+Write-Host "  Live streaming server setup complete!" -ForegroundColor Green
+
+# ── 5. Live Streaming Client ──────────────────────────────────
+Write-Host "`n[5/5] Setting up Live Streaming Client..." -ForegroundColor Cyan
+
+$liveClientPath = Join-Path $root "add-ons\live-streaming\client"
+Set-Location $liveClientPath
+
+Write-Host "  Installing Node dependencies..."
+npm install --silent
+
+Write-Host "  Live streaming client setup complete!" -ForegroundColor Green
+
 # ── Done ──────────────────────────────────────────────────────
 Write-Host "`n============================================" -ForegroundColor Green
 Write-Host " Setup complete! Now run: .\start.ps1" -ForegroundColor Green

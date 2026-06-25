@@ -35,11 +35,27 @@
             </a>
             {% endif %}
         </div>
-        <div class="ms-auto">
-            <a class="btn btn-sm btn-warning" href="{% url 'quiz_index' course.slug %}"><i class="fas fa-list"></i>
-                {% trans 'Take a Quiz' %}
-            </a>
-        </div>
+        <div class="ms-auto d-flex gap-2">
+    <a class="btn btn-sm btn-warning" href="{% url 'quiz_index' course.slug %}">
+        <i class="fas fa-list"></i> {% trans 'Take a Quiz' %}
+    </a>
+
+    {% if request.user.is_lecturer or request.user.is_superuser %}
+<button class="btn btn-sm fw-bold" id="startClassBtn"
+    onclick="startLiveClass()"
+    style="background-color: #dc2626; color: white;">
+    🔴 Start Live Class
+</button>
+
+{% elif request.user.is_student %}
+<button class="btn btn-sm fw-bold" id="joinClassBtn"
+    onclick="joinLiveClass()"
+    disabled
+    style="background-color: #6b7280; color: white; cursor: not-allowed;">
+    ⬤ Join Live Class
+</button>
+{% endif %}
+</div>
     </div>
 </div>
 
@@ -121,8 +137,8 @@
                                         <i class="primary" style="font-size: 22px;">
                                             {% trans 'Upload now.' %}
                                         </i>
-                                        {% endif %}
                                     </a>
+                                    {% endif %}
                                 </span>
                             </td>
                             <td></td>
@@ -202,8 +218,8 @@
                                         <i class="primary" style="font-size: 22px;">
                                             {% trans 'Upload now.' %}
                                         </i>
-                                        {% endif %}
                                     </a>
+                                    {% endif %}
                                 </span>
                             </td>
                             <td></td>
@@ -234,15 +250,6 @@
                         {% endif %}
                         <h5 class="fw-bold mb-0">{{ lecturer|title }}</h5>
                         <p class="mb-0">{{ lecturer.lecturer.email }}</p>
-                        <p class="text-muted small">Donec sed odio dui. Etiam porta sem malesuada magna mollis euismod.</p>
-                        <p>
-                            <a class="btn btn-sm btn-secondary" href="#" role="button"><i
-                                    class="fab fa-twitter"></i></a>
-                            <a class="btn btn-sm btn-secondary" href="#" role="button"><i
-                                    class="fab fa-facebook-f"></i></a>
-                            <a class="btn btn-sm btn-secondary" href="#" role="button"><i
-                                    class="fab fa-linkedin-in"></i></a>
-                        </p>
                     </div>
                 </div>
             </div>
@@ -253,5 +260,66 @@
         </div>
     </div>
 </div>
+<script>
+var LIVE_CLASS_APP_URL = '{{ LIVE_CLASS_APP_URL|default:"http://localhost:5173"|escapejs }}';
+var LIVE_CLASS_API_URL = '{{ LIVE_CLASS_API_URL|default:"http://localhost:5001"|escapejs }}';
+var ROOM = '{{ course.slug|escapejs }}';
+var CURRENT_USER = '{{ request.user.get_full_name|default:request.user.username|escapejs }}';
 
+function startLiveClass() {
+    var url = LIVE_CLASS_APP_URL + '?room=' + ROOM + '&user=' + encodeURIComponent(CURRENT_USER) + '&role=teacher';
+    window.open(url, '_blank');
+
+    var btn = document.getElementById('startClassBtn');
+    btn.innerHTML = '🔴 Live Class Running...';
+    btn.style.backgroundColor = '#16a34a';
+    btn.onclick = null;
+}
+
+function joinLiveClass() {
+    var url = LIVE_CLASS_APP_URL + '?room=' + ROOM + '&user=' + encodeURIComponent(CURRENT_USER) + '&role=student';
+    window.open(url, '_blank');
+}
+
+function checkClassStatus() {
+    fetch(LIVE_CLASS_API_URL + '/api/room/' + ROOM + '/status')
+        .then(res => res.json())
+        .then(data => {
+            // Student button update
+            var joinBtn = document.getElementById('joinClassBtn');
+            if (joinBtn) {
+                if (data.is_live) {
+                    joinBtn.disabled = false;
+                    joinBtn.style.backgroundColor = '#16a34a';
+                    joinBtn.style.cursor = 'pointer';
+                    joinBtn.innerHTML = '🟢 Join Live Class';
+                } else {
+                    joinBtn.disabled = true;
+                    joinBtn.style.backgroundColor = '#6b7280';
+                    joinBtn.style.cursor = 'not-allowed';
+                    joinBtn.innerHTML = '⬤ Join Live Class';
+                }
+            }
+
+            // Teacher button update
+            var startBtn = document.getElementById('startClassBtn');
+            if (startBtn) {
+                if (data.is_live) {
+                    startBtn.innerHTML = '🔴 Live Class Running...';
+                    startBtn.style.backgroundColor = '#16a34a';
+                    startBtn.onclick = null;
+                } else {
+                    // Class  — button reset
+                    startBtn.innerHTML = '🔴 Start Live Class';
+                    startBtn.style.backgroundColor = '#dc2626';
+                    startBtn.onclick = startLiveClass;
+                }
+            }
+        })
+        .catch(() => {});
+}
+
+checkClassStatus();
+setInterval(checkClassStatus, 5000);
+</script>
 {% endblock content %}
