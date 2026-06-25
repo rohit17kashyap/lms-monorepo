@@ -1,0 +1,4 @@
+#NOTE: This is an Aether internal implementation file, its format can be changed without prior notice.
+#Sun Aug 29 11:56:19 IST 2021
+kryo-4.0.1.pom>=
+kryo-4.0.1.jar>=

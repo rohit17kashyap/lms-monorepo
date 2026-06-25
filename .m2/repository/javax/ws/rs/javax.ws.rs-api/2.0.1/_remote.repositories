@@ -1,0 +1,4 @@
+#NOTE: This is an Aether internal implementation file, its format can be changed without prior notice.
+#Sun Aug 29 11:55:59 IST 2021
+javax.ws.rs-api-2.0.1.jar>=
+javax.ws.rs-api-2.0.1.pom>=
