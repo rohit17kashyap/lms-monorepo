@@ -1,16 +1,19 @@
 # LMS Monorepo
 
-A full-featured Learning Management System built with Django, plus a MERN chatbot add-on.
+A full-featured Learning Management System built with Django, plus a MERN chatbot and live-streaming add-on.
 
 ## Project Structure
 
 ```
 lms-monorepo/
-├── lms-base/           Django LMS backend (port 8000)
+├── lms-base/               Django LMS backend (port 8000)
 └── add-ons/
-    └── chatbot/
-        ├── server/     Node.js + Express API (port 5002)
-        └── client/     React + Vite frontend (port 5173)
+    ├── chatbot/
+    │   ├── server/         Node.js + Express API (port 5002)
+    │   └── client/         React + Vite frontend (port 5173)
+    └── live-streaming/
+        ├── server/         Node.js + Socket.io API (port 5001)
+        └── client/         React + Vite frontend (port 5174)
 ```
 
 ## Prerequisites
@@ -47,7 +50,7 @@ cd lms-base
 .\start.ps1
 ```
 
-This opens 3 terminal windows automatically:
+This opens 5 terminal windows automatically:
 
 | Service | URL |
 |---|---|
@@ -55,6 +58,8 @@ This opens 3 terminal windows automatically:
 | Django Admin | http://localhost:8000/admin |
 | Chatbot API | http://localhost:5002 |
 | Chatbot UI | http://localhost:5173 |
+| Live Streaming API | http://localhost:5001 |
+| Live Streaming UI | http://localhost:5174 |
 
 > Make sure MongoDB is running before starting.
 
@@ -66,7 +71,7 @@ This opens 3 terminal windows automatically:
 .\stop.ps1
 ```
 
-This kills Django, the chatbot server, and the chatbot client all at once.
+This kills all services (Django, chatbot, live-streaming) at once.
 
 ---
 
@@ -104,6 +109,22 @@ npm run dev
 
 ```powershell
 cd add-ons\chatbot\client
+npm install
+npm run dev
+```
+
+### Live Streaming Server
+
+```powershell
+cd add-ons\live-streaming\server
+npm install
+npm run dev
+```
+
+### Live Streaming Client
+
+```powershell
+cd add-ons\live-streaming\client
 npm install
 npm run dev
 ```
