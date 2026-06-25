@@ -1,0 +1,4 @@
+#NOTE: This is an Aether internal implementation file, its format can be changed without prior notice.
+#Sun Aug 29 11:57:00 IST 2021
+mule-netsuite-connector-11.2.5.pom>=
+mule-netsuite-connector-11.2.5-mule-plugin.jar>=

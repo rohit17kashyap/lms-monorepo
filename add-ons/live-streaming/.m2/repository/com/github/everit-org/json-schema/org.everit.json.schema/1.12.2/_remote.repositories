@@ -1,0 +1,4 @@
+#NOTE: This is an Aether internal implementation file, its format can be changed without prior notice.
+#Sun Aug 29 11:57:05 IST 2021
+org.everit.json.schema-1.12.2.pom>=
+org.everit.json.schema-1.12.2.jar>=
